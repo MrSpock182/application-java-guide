@@ -1,0 +1,11 @@
+server:
+  port: 8080
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  application:
+    name: rest
+  data:
+    mongodb:
+      auto-index-creation: true
+      uri: mongodb://mongodb2:27017/rest?maxPoolSize=9999&serverSelectionTimeoutMS=15000&connectTimeoutMS=15000

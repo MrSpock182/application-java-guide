@@ -1,0 +1,4 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/rest?maxPoolSize=9999&serverSelectionTimeoutMS=15000&connectTimeoutMS=15000
