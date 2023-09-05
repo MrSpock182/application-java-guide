@@ -86,6 +86,31 @@ class UserResourceTests {
     }
 
     @Test
+    void whenSaveStatus400CharacterMoreThan45Test() throws Exception {
+        final MockMvc mockMvc = MockMvcBuilders
+                .standaloneSetup(userResource)
+                .setControllerAdvice(new HandlerExceptionAdvice())
+                .build();
+        mockMvc.perform(post("/names")
+                        .content(objectMapper.writeValueAsString(new UserRequest(
+                                "tetstetatatatstatstatststetehehrhahshdhahdkfertkkw", 1)))
+                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void whenSaveStatus400ValueMoreThan99Test() throws Exception {
+        final MockMvc mockMvc = MockMvcBuilders
+                .standaloneSetup(userResource)
+                .setControllerAdvice(new HandlerExceptionAdvice())
+                .build();
+        mockMvc.perform(post("/names")
+                        .content(objectMapper.writeValueAsString(new UserRequest("test-1", 100)))
+                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void whenSaveStatus500ErrorToDatabaseTest() throws Exception {
         final MockMvc mockMvc = MockMvcBuilders
                 .standaloneSetup(userResource)

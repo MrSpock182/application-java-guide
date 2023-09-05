@@ -7,6 +7,9 @@ import io.github.mrspock182.rest.domain.entity.User;
 import java.util.UUID;
 
 public class UserResourceAdapter {
+    private UserResourceAdapter() {
+    }
+
     public static UserResponse cast(final User user) {
         return new UserResponse(user.name(), user.value());
     }
