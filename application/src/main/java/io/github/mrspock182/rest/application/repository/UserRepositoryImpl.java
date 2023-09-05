@@ -4,8 +4,8 @@ import io.github.mrspock182.rest.application.repository.adapter.UserRepositoryAd
 import io.github.mrspock182.rest.application.repository.client.UserRepositoryWithMongodb;
 import io.github.mrspock182.rest.application.repository.orm.UserOrm;
 import io.github.mrspock182.rest.domain.entity.User;
-import io.github.mrspock182.rest.domain.exception.InternalServerError;
-import io.github.mrspock182.rest.domain.exception.NotFound;
+import io.github.mrspock182.rest.domain.exception.ApplicationErrorException;
+import io.github.mrspock182.rest.domain.exception.NotFoundException;
 import io.github.mrspock182.rest.domain.repository.UserRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
@@ -27,7 +27,7 @@ public class UserRepositoryImpl implements UserRepository {
             UserOrm orm = UserRepositoryAdapter.cast(user);
             return UserRepositoryAdapter.cast(userRepository.save(orm));
         } catch (Exception ex) {
-            throw new InternalServerError(ex);
+            throw new ApplicationErrorException(ex);
         }
     }
 
@@ -39,14 +39,14 @@ public class UserRepositoryImpl implements UserRepository {
                     .map(UserRepositoryAdapter::cast)
                     .collect(Collectors.collectingAndThen(Collectors.toList(), result -> {
                         if (result.isEmpty()) {
-                            throw new NotFound("Registers not found");
+                            throw new NotFoundException("Registers not found");
                         }
                         return result;
                     }));
-        } catch (NotFound ex) {
+        } catch (NotFoundException ex) {
             throw ex;
         } catch (Exception ex) {
-            throw new InternalServerError(ex);
+            throw new ApplicationErrorException(ex);
         }
     }
 }

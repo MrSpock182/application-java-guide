@@ -6,8 +6,8 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import io.github.mrspock182.rest.application.resource.advice.HandlerExceptionAdvice;
 import io.github.mrspock182.rest.application.resource.dto.UserRequest;
 import io.github.mrspock182.rest.domain.entity.User;
-import io.github.mrspock182.rest.domain.exception.InternalServerError;
-import io.github.mrspock182.rest.domain.exception.NotFound;
+import io.github.mrspock182.rest.domain.exception.ApplicationErrorException;
+import io.github.mrspock182.rest.domain.exception.NotFoundException;
 import io.github.mrspock182.rest.domain.repository.UserRepository;
 import io.github.mrspock182.rest.domain.service.UserReversedService;
 import org.junit.jupiter.api.Test;
@@ -116,7 +116,7 @@ class UserResourceTests {
                 .standaloneSetup(userResource)
                 .setControllerAdvice(new HandlerExceptionAdvice())
                 .build();
-        when(userRepository.save(any(User.class))).thenThrow(new InternalServerError());
+        when(userRepository.save(any(User.class))).thenThrow(new ApplicationErrorException());
         mockMvc.perform(post("/names")
                         .content(objectMapper.writeValueAsString(new UserRequest("name-1", 1)))
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
@@ -143,7 +143,7 @@ class UserResourceTests {
                 .standaloneSetup(userResource)
                 .setControllerAdvice(new HandlerExceptionAdvice())
                 .build();
-        when(userReversedService.reversedList()).thenThrow(new NotFound());
+        when(userReversedService.reversedList()).thenThrow(new NotFoundException());
         mockMvc.perform(get("/names")
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
@@ -156,7 +156,7 @@ class UserResourceTests {
                 .standaloneSetup(userResource)
                 .setControllerAdvice(new HandlerExceptionAdvice())
                 .build();
-        when(userReversedService.reversedList()).thenThrow(new InternalServerError());
+        when(userReversedService.reversedList()).thenThrow(new ApplicationErrorException());
         mockMvc.perform(get("/names")
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
                 .andExpect(status().isInternalServerError());

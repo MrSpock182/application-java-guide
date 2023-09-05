@@ -1,9 +1,9 @@
 package io.github.mrspock182.rest.application.resource.advice;
 
 import io.github.mrspock182.rest.application.resource.dto.ErrorResponse;
-import io.github.mrspock182.rest.domain.exception.BadRequest;
-import io.github.mrspock182.rest.domain.exception.InternalServerError;
-import io.github.mrspock182.rest.domain.exception.NotFound;
+import io.github.mrspock182.rest.domain.exception.InvalidAttributeException;
+import io.github.mrspock182.rest.domain.exception.ApplicationErrorException;
+import io.github.mrspock182.rest.domain.exception.NotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,7 +23,7 @@ public class HandlerExceptionAdvice {
 
     @ResponseBody
     @ResponseStatus(INTERNAL_SERVER_ERROR)
-    @ExceptionHandler({Exception.class, InternalServerError.class})
+    @ExceptionHandler({Exception.class, ApplicationErrorException.class})
     public ErrorResponse handleErrorNotMap(
             final Exception exception,
             final HttpServletRequest request
@@ -41,9 +41,9 @@ public class HandlerExceptionAdvice {
 
     @ResponseBody
     @ResponseStatus(NOT_FOUND)
-    @ExceptionHandler({NotFound.class})
+    @ExceptionHandler({NotFoundException.class})
     public ErrorResponse handleNotFound(
-            final NotFound exception,
+            final NotFoundException exception,
             final HttpServletRequest request
     ) {
         return new ErrorResponse(
@@ -73,9 +73,9 @@ public class HandlerExceptionAdvice {
 
     @ResponseBody
     @ResponseStatus(BAD_REQUEST)
-    @ExceptionHandler({BadRequest.class})
+    @ExceptionHandler({InvalidAttributeException.class})
     public ErrorResponse handleBadRequest(
-            final BadRequest exception,
+            final InvalidAttributeException exception,
             final HttpServletRequest request
     ) {
         return new ErrorResponse(

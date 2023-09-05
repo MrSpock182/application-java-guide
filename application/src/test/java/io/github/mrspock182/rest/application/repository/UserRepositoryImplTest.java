@@ -5,8 +5,8 @@ import io.github.mrspock182.rest.application.MockitoInitTests;
 import io.github.mrspock182.rest.application.repository.client.UserRepositoryWithMongodb;
 import io.github.mrspock182.rest.application.repository.orm.UserOrm;
 import io.github.mrspock182.rest.domain.entity.User;
-import io.github.mrspock182.rest.domain.exception.InternalServerError;
-import io.github.mrspock182.rest.domain.exception.NotFound;
+import io.github.mrspock182.rest.domain.exception.ApplicationErrorException;
+import io.github.mrspock182.rest.domain.exception.NotFoundException;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -47,7 +47,7 @@ class UserRepositoryImplTest extends MockitoInitTests {
 
     @Test
     void whenIntegrationWithDatabaseIsErrorTest() {
-        assertThrows(InternalServerError.class, () -> {
+        assertThrows(ApplicationErrorException.class, () -> {
             when(client.save(any(UserOrm.class))).thenThrow(new MongoException(""));
             User user = repository.save(new User("1", "user-1", 1));
             assertEquals(new User("1", "user-1", 1), user);
@@ -69,7 +69,7 @@ class UserRepositoryImplTest extends MockitoInitTests {
 
     @Test
     void whenIsNotRegisterOnTheListTest() {
-        assertThrows(NotFound.class, () -> {
+        assertThrows(NotFoundException.class, () -> {
             when(client.findAll(any(PageRequest.class))).thenReturn(new PageImpl<>(List.of()));
             repository.findAll(0);
             verify(client).findAll(any(PageRequest.class));
@@ -78,7 +78,7 @@ class UserRepositoryImplTest extends MockitoInitTests {
 
     @Test
     void whenIntegrationDatabaseIsErrorTest() {
-        assertThrows(InternalServerError.class, () -> {
+        assertThrows(ApplicationErrorException.class, () -> {
             when(client.findAll(any(PageRequest.class))).thenThrow(new MongoException(""));
             repository.findAll(0);
             verify(client).findAll(any(PageRequest.class));
